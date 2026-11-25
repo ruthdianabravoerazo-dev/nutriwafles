@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nutri Wafles | Pequeños cambios, grandes ideas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink-stripe: #f8d5dc;
+      --cream-stripe: #fcf0d8;
+      --primary-pink: #ff6b95;
+      --soft-pink: #ffe6ee;
+      --dark-pink: #d9386a;
+      --brand-red: #c93b2b;
+      --text-dark: #3d1e26;
+      --text-muted: #6e4752;
+      --card-bg: rgba(255, 255, 255, 0.96);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--text-dark);
+      background: repeating-linear-gradient(
+        90deg,
+        var(--pink-stripe) 0px,
+        var(--pink-stripe) 45px,
+        var(--cream-stripe) 45px,
+        var(--cream-stripe) 90px
+      );
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    /* ==========================================
+       MODAL DE BIENVENIDA ROSADO Y ADORABLE
+       ========================================== */
+    #welcome-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 182, 203, 0.68);
+      backdrop-filter: blur(8px);
+      z-index: 20000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeInBg 0.4s ease;
+    }
+
+    @keyframes fadeInBg {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .welcome-modal {
+      background: linear-gradient(180deg, #fff5f8 0%, #ffe3ec 100%);
+      border: 4px solid #ff7aa2;
+      box-shadow: 0 20px 50px rgba(217, 56, 106, 0.35), 0 0 0 8px rgba(255, 255, 255, 0.65);
+      border-radius: 36px;
+      max-width: 460px;
+      width: 100%;
+      padding: 36px 30px;
+      text-align: center;
+      position: relative;
+      animation: popIn 0.45s cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.82) translateY(20px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .welcome-sparkles {
+      font-size: 1.6rem;
+      letter-spacing: 6px;
+      margin-bottom: 8px;
+    }
+
+    .welcome-avatar-badge {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 14px;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 3px solid #ff7aa2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(255, 107, 149, 0.25);
+    }
+
+    .welcome-modal h2 {
+      font-size: 2.1rem;
+      color: #d9386a;
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+
+    .welcome-modal p {
+      color: #6e4752;
+      font-size: 1.04rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .welcome-enter-btn {
+      background: linear-gradient(135deg, #ff7aa2 0%, #ff4d84 100%);
+      color: #ffffff;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 77, 132, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .welcome-enter-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 24px rgba(255, 77, 132, 0.5);
+    }
+
+    /* ==========================================
+       PERSONAJE 2D 8-BIT OVALADO PERFECTO
+       ========================================== */
+    #pixel-mascot-wrapper {
+      position: fixed;
+      left: 36px;
+      top: 110px;
+      z-index: 9999;
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #pixel-canvas {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(120, 30, 55, 0.28));
+    }
+
+    #mascot-bubble {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8.5px;
+      line-height: 1.45;
+      background: #ffffff;
+      color: #3d1e26;
+      border: 3px solid #3d1e26;
+      padding: 6px 10px;
+      border-radius: 10px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      box-shadow: 3px 3px 0 #ff6b95;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    #mascot-bubble.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* DOCK FLOTANTE 8-BIT */
+    .retro-dock {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 9998;
+      background: rgba(255, 255, 255, 0.96);
+      border: 3px solid #3d1e26;
+      box-shadow: 4px 4px 0 var(--brand-red);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .retro-dock-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8.5px;
+      color: var(--brand-red);
+      text-align: center;
+    }
+
+    .retro-btns {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .retro-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: 7px 9px;
+      border: 2px solid #3d1e26;
+      background: #ff85a8;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 6px;
+      box-shadow: 2px 2px 0 #3d1e26;
+      transition: transform 0.1s;
+    }
+
+    .retro-btn:hover {
+      background: #ff5689;
+      transform: translate(-1px, -1px);
+    }
+
+    .retro-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .retro-btn.active {
+      background: var(--brand-red);
+    }
+
+    /* NAVEGACIÓN */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 3px solid #f5a3b7;
+      box-shadow: 0 4px 20px rgba(180, 70, 100, 0.12);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-badge {
+      background: var(--brand-red);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      box-shadow: 0 3px 0 #8e2317;
+    }
+
+    .logo span {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      color: var(--dark-pink);
+      font-weight: 700;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 800;
+      font-size: 0.92rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+
+    nav a:hover {
+      background: #ffe3ec;
+      color: var(--dark-pink);
+    }
+
+    .nav-cart-btn {
+      background: var(--brand-red);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(201, 59, 43, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .nav-cart-btn:hover {
+      transform: scale(1.05);
+      background: #a92b1d;
+    }
+
+    .cart-count {
+      background: #ffd447;
+      color: #3d1e26;
+      padding: 1px 7px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+    }
+
+    /* HERO CON ILUSTRACIÓN TRÍO DE WAFFLES */
+    .hero {
+      max-width: 1180px;
+      margin: 30px auto;
+      padding: 0 24px;
+    }
+
+    .hero-grid {
+      background: var(--card-bg);
+      padding: 36px;
+      border-radius: 32px;
+      border: 3px solid #f5a3b7;
+      box-shadow: 0 15px 35px rgba(180, 70, 100, 0.15);
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .pill-tag {
+      display: inline-block;
+      background: #ffe3ec;
+      color: var(--dark-pink);
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+      border: 1.5px solid #f5a3b7;
+    }
+
+    .hero-text h1 {
+      font-size: 2.75rem;
+      line-height: 1.15;
+      color: var(--brand-red);
+      margin-bottom: 16px;
+    }
+
+    .hero-text h1 span {
+      color: var(--primary-pink);
+    }
+
+    .hero-text p {
+      font-size: 1.06rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--primary-pink);
+      color: white;
+      border: none;
+      text-decoration: none;
+      padding: 13px 26px;
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 107, 149, 0.4);
+      transition: transform 0.2s, background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background: var(--dark-pink);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--brand-red);
+      border: 2px solid var(--brand-red);
+      text-decoration: none;
+      padding: 11px 24px;
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--brand-red);
+      color: #fff;
+    }
+
+    .hero-visual {
+      position: relative;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 4px solid var(--brand-red);
+      box-shadow: 0 12px 28px rgba(201, 59, 43, 0.22);
+      background: linear-gradient(135deg, #fff5f8 0%, #fff9ec 100%);
+      padding: 12px;
+    }
+
+    .hero-visual svg {
+      width: 100%;
+      height: 315px;
+      display: block;
+      border-radius: 18px;
+    }
+
+    .hero-badge-float {
+      margin-top: 10px;
+      background: #ffffff;
+      padding: 10px 16px;
+      border-radius: 16px;
+      border: 2px solid #f5a3b7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--brand-red);
+    }
+
+    /* SECCIONES GENERALES */
+    section {
+      max-width: 1180px;
+      margin: 64px auto;
+      padding: 0 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .section-header h2 {
+      font-size: 2.2rem;
+      color: var(--brand-red);
+      margin-bottom: 8px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* FILTRO INTERACTIVO */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .filter-pill {
+      background: #fff;
+      border: 2px solid #f5a3b7;
+      color: var(--text-dark);
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-pill.active, .filter-pill:hover {
+      background: var(--brand-red);
+      border-color: var(--brand-red);
+      color: #fff;
+    }
+
+    /* TARJETAS DE WAFFLES CON IMÁGENES DEDICADAS DE ESPINACA, ZANAHORIA Y BETERRAGA */
+    .flavors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 26px;
+    }
+
+    .flavor-card {
+      background: var(--card-bg);
+      border-radius: 26px;
+      overflow: hidden;
+      border: 3px solid transparent;
+      box-shadow: 0 12px 28px rgba(100, 40, 60, 0.12);
+      transition: transform 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .flavor-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .flavor-card.spinach { border-color: #81c784; }
+    .flavor-card.carrot { border-color: #ffb74d; }
+    .flavor-card.beet { border-color: #f06292; }
+
+    .flavor-img-box {
+      position: relative;
+      height: 225px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .flavor-img-box svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .flavor-card:hover .flavor-img-box svg {
+      transform: scale(1.05);
+    }
+
+    .flavor-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: #fff;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+    }
+
+    .spinach .flavor-tag { background: #2e7d32; }
+    .carrot .flavor-tag { background: #ef6c00; }
+    .beet .flavor-tag { background: #ad1457; }
+
+    .like-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.94);
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+      transition: transform 0.2s;
+      z-index: 2;
+    }
+
+    .like-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .flavor-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .flavor-body h3 {
+      font-size: 1.45rem;
+      margin-bottom: 8px;
+    }
+
+    .spinach h3 { color: #2e7d32; }
+    .carrot h3 { color: #ef6c00; }
+    .beet h3 { color: #ad1457; }
+
+    .ingredients-list {
+      margin: 14px 0 18px;
+      padding-top: 12px;
+      border-top: 1.5px dashed #e0c5cd;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .card-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .order-card-btn {
+      flex: 1;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .spinach .order-card-btn { background: #2e7d32; }
+    .carrot .order-card-btn { background: #ef6c00; }
+    .beet .order-card-btn { background: #ad1457; }
+
+    .order-card-btn:hover {
+      opacity: 0.92;
+      transform: scale(1.02);
+    }
+
+    .detail-card-btn {
+      background: #fff5f8;
+      border: 2px solid #f5a3b7;
+      color: var(--dark-pink);
+      padding: 10px 14px;
+      border-radius: 50px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .detail-card-btn:hover {
+      background: #ffe3ec;
+    }
+
+    /* ARMA TU PEDIDO */
+    .order-builder {
+      background: var(--card-bg);
+      border-radius: 30px;
+      padding: 36px;
+      border: 3px solid var(--brand-red);
+      box-shadow: 0 15px 35px rgba(201, 59, 43, 0.14);
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .builder-group {
+      margin-bottom: 20px;
+    }
+
+    .builder-group label {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--brand-red);
+      font-size: 1.02rem;
+    }
+
+    .option-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip-select {
+      padding: 9px 16px;
+      border-radius: 50px;
+      border: 2px solid #f5a3b7;
+      background: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .chip-select.selected {
+      background: var(--primary-pink);
+      border-color: var(--primary-pink);
+      color: #fff;
+    }
+
+    .qty-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff5f8;
+      padding: 6px 16px;
+      border-radius: 50px;
+      border: 2px solid #f5a3b7;
+    }
+
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--brand-red);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .order-summary-box {
+      background: #fff7f9;
+      border: 2.5px dashed var(--primary-pink);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .order-summary-box h3 {
+      color: var(--brand-red);
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+    }
+
+    .cart-items-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .cart-items-list li {
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid #f5a3b7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .remove-item-btn {
+      background: none;
+      border: none;
+      color: var(--brand-red);
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .whatsapp-send-btn {
+      width: 100%;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.35);
+      transition: transform 0.2s;
+    }
+
+    .whatsapp-send-btn:hover {
+      transform: translateY(-2px);
+      background: #1ebe5d;
+    }
+
+    /* DESIGN THINKING Y LIENZO CANVAS */
+    .dt-timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 16px;
+    }
+
+    .dt-step {
+      background: var(--card-bg);
+      padding: 22px;
+      border-radius: 22px;
+      border: 2px solid #f5a3b7;
+      box-shadow: 0 8px 20px rgba(180, 70, 100, 0.08);
+    }
+
+    .dt-num {
+      display: inline-block;
+      background: var(--primary-pink);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 32px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .dt-step h3 {
+      font-size: 1.2rem;
+      color: var(--dark-pink);
+      margin-bottom: 8px;
+    }
+
+    .dt-step p {
+      font-size: 0.93rem;
+      color: var(--text-muted);
+    }
+
+    .business-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 26px;
+      border: 2.5px solid #f5a3b7;
+      box-shadow: 0 10px 25px rgba(180, 70, 100, 0.1);
+    }
+
+    .panel-card h3 {
+      font-size: 1.5rem;
+      color: var(--brand-red);
+      margin-bottom: 16px;
+    }
+
+    .styled-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .styled-list li {
+      background: #fff7f9;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border-left: 4px solid var(--primary-pink);
+      font-size: 0.95rem;
+    }
+
+    .styled-list strong {
+      color: var(--dark-pink);
+    }
+
+    /* EQUIPO COAR PASCO */
+    .team-box {
+      background: var(--card-bg);
+      padding: 36px;
+      border-radius: 30px;
+      border: 3px solid #f5a3b7;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(180, 70, 100, 0.12);
+    }
+
+    .team-members {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .member-chip {
+      background: linear-gradient(135deg, #ff7aa2, #c93b2b);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 5px 12px rgba(201, 59, 43, 0.25);
+    }
+
+    /* TOAST */
+    #toast-msg {
+      position: fixed;
+      top: 84px;
+      right: 24px;
+      background: #3d1e26;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 14px;
+      border-left: 5px solid #ffd447;
+      font-weight: 800;
+      font-size: 0.92rem;
+      z-index: 10000;
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    #toast-msg.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--brand-red);
+      color: white;
+      padding: 48px 24px 96px;
+      margin-top: 70px;
+      border-top: 6px solid #ffd447;
+    }
+
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .footer-brand h2 {
+      font-size: 2.1rem;
+      margin-bottom: 10px;
+    }
+
+    .footer-quote {
+      background: rgba(255, 255, 255, 0.14);
+      padding: 14px 18px;
+      border-radius: 16px;
+      margin-top: 14px;
+      font-weight: 700;
+    }
+
+    .contact-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .contact-item {
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--text-dark);
+      padding: 12px 18px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .contact-item:hover {
+      transform: translateX(5px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid, .order-builder, .business-grid, .footer-content {
+        grid-template-columns: 1fr;
+      }
+      .hero-text h1 {
+        font-size: 2.2rem;
+      }
+      .retro-dock {
+        left: 12px;
+        right: 12px;
+        bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL DE BIENVENIDA ADORABLE EN TONO ROSADO -->
+  <div id="welcome-overlay">
+    <div class="welcome-modal">
+      <div class="welcome-sparkles">🌸 ✨ 🧇 ✨ 🌸</div>
+      <div class="welcome-avatar-badge">
+        <canvas id="welcome-kirby-preview" width="80" height="80" style="image-rendering: pixelated;"></canvas>
+      </div>
+      <h2>¡Bienvenido, Cliente! 💖</h2>
+      <p>
+        Qué alegría tenerte en <strong>Nutri Wafles</strong>. Explora nuestros deliciosos waffles
+        artesanales de <strong>espinaca, zanahoria y beterraga</strong> hechos con mucho cariño en el COAR Pasco[cite: 1].
+      </p>
+      <button class="welcome-enter-btn" onclick="closeWelcome()">
+        🍓 ¡Entrar y Ver Wafles!
+      </button>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓN TOAST -->
+  <div id="toast-msg">¡Agregado a tu pedido!</div>
+
+  <!-- PERSONAJE KIRBY 2D 8-BIT ESFÉRICO/OVALADO PERFECTO -->
+  <div id="pixel-mascot-wrapper" title="¡Haz clic en mí para cambiar mi gesto!">
+    <div id="mascot-bubble" class="show">¡Bienvenido cliente! 💖</div>
+    <canvas id="pixel-canvas" width="128" height="128"></canvas>
+  </div>
+
+  <!-- CONTROL FLOTANTE 8-BIT -->
+  <div class="retro-dock">
+    <div class="retro-dock-title">CHEF 8-BIT • GESTOS</div>
+    <div class="retro-btns">
+      <button id="btn-walk" class="retro-btn active" onclick="setMode('walk')">🚶 Pasear</button>
+      <button id="btn-eat" class="retro-btn" onclick="setMode('eat')">🧇 Comer</button>
+      <button id="btn-thumb" class="retro-btn" onclick="setMode('thumb')">👍 Rico</button>
+      <button id="btn-jump" class="retro-btn" onclick="setMode('jump')">⭐ Saltar</button>
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-badge">NUTRI</span>
+        <span>Wafles</span>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#variedades">Variedades</a></li>
+          <li><a href="#pedir">Pedir Ahora</a></li>
+          <li><a href="#design-thinking">Design Thinking</a></li>
+          <li><a href="#equipo">Equipo COAR</a></li>
+          <li>
+            <button class="nav-cart-btn" onclick="document.getElementById('pedir').scrollIntoView()">
+              🧇 Mi Pedido <span id="nav-cart-count" class="cart-count">0</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO CON ILUSTRACIÓN DE TRÍO DE WAFFLES NATURALES -->
+  <main>
+    <div class="hero">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <span class="pill-tag">Emprendimiento Estudiantil • COAR Pasco</span>
+          <h1>Nutri <span>Wafles</span>: nutritivos, coloridos y deliciosos</h1>
+          <p>
+            Ofrecemos un refrigerio nutritivo, delicioso y atractivo para los estudiantes del
+            <strong>COAR Pasco</strong>[cite: 1]. Elaboramos waffles naturales utilizando tres verduras principales:
+            <strong>espinaca, zanahoria y beterraga</strong>[cite: 1], combinando creatividad, ingredientes
+            naturales y una presentación agradable para promover una alimentación más variada[cite: 1].
+          </p>
+          <div class="hero-buttons">
+            <a href="#pedir" class="btn-primary">🧇 Armar mi Pedido</a>
+            <a href="#variedades" class="btn-secondary">Explorar Sabores</a>
+          </div>
+        </div>
+
+        <!-- ILUSTRACIÓN TRÍO DE WAFFLES (ESPINACA, ZANAHORIA Y BETERRAGA) -->
+        <div class="hero-visual">
+          <svg viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="plateGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="85%" stop-color="#f7eef1" />
+                <stop offset="100%" stop-color="#e3cdd4" />
+              </radialGradient>
+            </defs>
+            <!-- Fondo mesa pastel -->
+            <rect width="500" height="320" fill="#fff4f7" />
+            <circle cx="80" cy="60" r="90" fill="#ffe0ea" opacity="0.55" />
+            <circle cx="430" cy="260" r="110" fill="#ffedd8" opacity="0.65" />
+            <!-- Plato blanco -->
+            <ellipse cx="250" cy="185" rx="205" ry="98" fill="url(#plateGrad)" stroke="#e5c8d1" stroke-width="4" />
+            <ellipse cx="250" cy="182" rx="165" ry="72" fill="none" stroke="#f0dce2" stroke-width="2" />
+
+            <!-- WAFFLE 1: ESPINACA (VERDE NATURAL) -->
+            <g transform="translate(155, 165) rotate(-14)">
+              <circle cx="0" cy="6" r="64" fill="#2e6b34" />
+              <circle cx="0" cy="0" r="64" fill="#58b35c" stroke="#3c8a40" stroke-width="4" />
+              <g fill="#38803c">
+                <rect x="-36" y="-36" width="18" height="18" rx="4" />
+                <rect x="-9" y="-36" width="18" height="18" rx="4" />
+                <rect x="18" y="-36" width="18" height="18" rx="4" />
+                <rect x="-36" y="-9" width="18" height="18" rx="4" />
+                <rect x="-9" y="-9" width="18" height="18" rx="4" />
+                <rect x="18" y="-9" width="18" height="18" rx="4" />
+                <rect x="-36" y="18" width="18" height="18" rx="4" />
+                <rect x="-9" y="18" width="18" height="18" rx="4" />
+                <rect x="18" y="18" width="18" height="18" rx="4" />
+              </g>
+            </g>
+
+            <!-- WAFFLE 2: ZANAHORIA (NARANJA DORADO) -->
+            <g transform="translate(345, 165) rotate(14)">
+              <circle cx="0" cy="6" r="64" fill="#b8560b" />
+              <circle cx="0" cy="0" r="64" fill="#ff9a36" stroke="#d97214" stroke-width="4" />
+              <g fill="#d46811">
+                <rect x="-36" y="-36" width="18" height="18" rx="4" />
+                <rect x="-9" y="-36" width="18" height="18" rx="4" />
+                <rect x="18" y="-36" width="18" height="18" rx="4" />
+                <rect x="-36" y="-9" width="18" height="18" rx="4" />
+                <rect x="-9" y="-9" width="18" height="18" rx="4" />
+                <rect x="18" y="-9" width="18" height="18" rx="4" />
+                <rect x="-36" y="18" width="18" height="18" rx="4" />
+                <rect x="-9" y="18" width="18" height="18" rx="4" />
+                <rect x="18" y="18" width="18" height="18" rx="4" />
+              </g>
+            </g>
+
+            <!-- WAFFLE 3: BETERRAGA (ROSADO/FUCSIA INTENSO AL CENTRO) -->
+            <g transform="translate(250, 145)">
+              <circle cx="0" cy="7" r="68" fill="#851742" />
+              <circle cx="0" cy="0" r="68" fill="#e0437c" stroke="#b32459" stroke-width="4" />
+              <g fill="#ad1f54">
+                <rect x="-38" y="-38" width="19" height="19" rx="4" />
+                <rect x="-9.5" y="-38" width="19" height="19" rx="4" />
+                <rect x="19" y="-38" width="19" height="19" rx="4" />
+                <rect x="-38" y="-9.5" width="19" height="19" rx="4" />
+                <rect x="-9.5" y="-9.5" width="19" height="19" rx="4" />
+                <rect x="19" y="-9.5" width="19" height="19" rx="4" />
+                <rect x="-38" y="19" width="19" height="19" rx="4" />
+                <rect x="-9.5" y="19" width="19" height="19" rx="4" />
+                <rect x="19" y="19" width="19" height="19" rx="4" />
+              </g>
+              <!-- Crema batida y fresa encima -->
+              <circle cx="0" cy="-4" r="18" fill="#ffffff" />
+              <path d="M-12 -14 C-12 -28, 12 -28, 12 -14 C12 -4, 0 4, 0 4 C0 4, -12 -4, -12 -14 Z" fill="#ff2e55" />
+              <path d="M-7 -24 L0 -19 L7 -24 L3 -28 L-3 -28 Z" fill="#2e8b3c" />
+            </g>
+
+            <!-- Arándanos decorativos -->
+            <circle cx="195" cy="205" r="10" fill="#324376" />
+            <circle cx="192" cy="202" r="3" fill="#788cc7" />
+            <circle cx="305" cy="208" r="10" fill="#324376" />
+            <circle cx="302" cy="205" r="3" fill="#788cc7" />
+          </svg>
+          <div class="hero-badge-float">
+            <span>🥬 Espinaca • 🥕 Zanahoria • 🍠 Beterraga</span>
+            <span>COAR Pasco</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATÁLOGO INTERACTIVO CON IMÁGENES DEDICADAS POR VERDURA -->
+    <section id="variedades">
+      <div class="section-header">
+        <h2>Nuestras Tres Variedades Naturales</h2>
+        <p>
+          Cada waffle conserva el color y los nutrientes de su verdura principal, preparado con harina
+          de avena, leche y huevos frescos[cite: 1, 5, 10].
+        </p>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-pill active" onclick="filterFlavors('all', this)">Todos (3)</button>
+        <button class="filter-pill" onclick="filterFlavors('spinach', this)">🥬 Espinaca</button>
+        <button class="filter-pill" onclick="filterFlavors('carrot', this)">🥕 Zanahoria</button>
+        <button class="filter-pill" onclick="filterFlavors('beet', this)">🍠 Beterraga</button>
+      </div>
+
+      <div class="flavors-grid">
+        <!-- 1. WAFFLE DE ESPINACA -->
+        <article class="flavor-card spinach" data-category="spinach">
+          <div class="flavor-img-box">
+            <span class="flavor-tag">🥬 100% Espinaca Fresca</span>
+            <button class="like-btn" onclick="toggleLike(this, 'Waffle de Espinaca')" title="Me gusta">🤍</button>
+            <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="240" fill="#e8f6ea" />
+              <circle cx="60" cy="40" r="70" fill="#c8ebd0" />
+              <circle cx="350" cy="200" r="85" fill="#d4f0da" />
+              <!-- Plato -->
+              <ellipse cx="200" cy="145" rx="145" ry="68" fill="#ffffff" stroke="#cde3d1" stroke-width="3" />
+              <!-- Waffle Verde de Espinaca -->
+              <g transform="translate(200, 125)">
+                <ellipse cx="0" cy="10" rx="86" ry="54" fill="#2d6e33" />
+                <ellipse cx="0" cy="0" rx="86" ry="54" fill="#59b85e" stroke="#3b8c40" stroke-width="4" />
+                <g fill="#38853d">
+                  <rect x="-50" y="-28" width="24" height="14" rx="4" />
+                  <rect x="-12" y="-28" width="24" height="14" rx="4" />
+                  <rect x="26" y="-28" width="24" height="14" rx="4" />
+                  <rect x="-50" y="-7" width="24" height="14" rx="4" />
+                  <rect x="-12" y="-7" width="24" height="14" rx="4" />
+                  <rect x="26" y="-7" width="24" height="14" rx="4" />
+                  <rect x="-50" y="14" width="24" height="14" rx="4" />
+                  <rect x="-12" y="14" width="24" height="14" rx="4" />
+                  <rect x="26" y="14" width="24" height="14" rx="4" />
+                </g>
+                <!-- Hojas frescas de espinaca y miel -->
+                <path d="M-25 -32 C-45 -52, -10 -65, 0 -38 Z" fill="#2e8b37" />
+                <path d="M5 -32 C25 -55, 50 -42, 22 -28 Z" fill="#3da347" />
+                <circle cx="0" cy="-22" r="10" fill="#ffd954" />
+              </g>
+            </svg>
+          </div>
+          <div class="flavor-body">
+            <h3>Waffle de Espinaca</h3>
+            <p>
+              Color verde natural y textura esponjosa. Una alternativa creativa y rica en nutrientes
+              ideal para recargar energía durante los descansos escolares[cite: 1, 4].
+            </p>
+            <div class="ingredients-list">Ingredientes: Espinaca fresca, harina de avena, leche y huevo[cite: 1, 5, 10].</div>
+            <div class="card-actions">
+              <button class="order-card-btn" onclick="quickAdd('Waffle de Espinaca')">+ Agregar al Pedido</button>
+              <button class="detail-card-btn" onclick="selectInBuilder('Waffle de Espinaca')">Personalizar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. WAFFLE DE ZANAHORIA -->
+        <article class="flavor-card carrot" data-category="carrot">
+          <div class="flavor-img-box">
+            <span class="flavor-tag">🥕 100% Zanahoria Natural</span>
+            <button class="like-btn" onclick="toggleLike(this, 'Waffle de Zanahoria')" title="Me gusta">🤍</button>
+            <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="240" fill="#fff4e4" />
+              <circle cx="340" cy="45" r="75" fill="#ffe1bd" />
+              <circle cx="55" cy="195" r="80" fill="#ffe8cc" />
+              <!-- Plato -->
+              <ellipse cx="200" cy="145" rx="145" ry="68" fill="#ffffff" stroke="#edd6be" stroke-width="3" />
+              <!-- Waffle Dorado Naranja de Zanahoria -->
+              <g transform="translate(200, 125)">
+                <ellipse cx="0" cy="10" rx="86" ry="54" fill="#b8540a" />
+                <ellipse cx="0" cy="0" rx="86" ry="54" fill="#ff9933" stroke="#d96e14" stroke-width="4" />
+                <g fill="#cf630e">
+                  <rect x="-50" y="-28" width="24" height="14" rx="4" />
+                  <rect x="-12" y="-28" width="24" height="14" rx="4" />
+                  <rect x="26" y="-28" width="24" height="14" rx="4" />
+                  <rect x="-50" y="-7" width="24" height="14" rx="4" />
+                  <rect x="-12" y="-7" width="24" height="14" rx="4" />
+                  <rect x="26" y="-7" width="24" height="14" rx="4" />
+                  <rect x="-50" y="14" width="24" height="14" rx="4" />
+                  <rect x="-12" y="14" width="24" height="14" rx="4" />
+                  <rect x="26" y="14" width="24" height="14" rx="4" />
+                </g>
+                <!-- Zanahoria mini y crema -->
+                <path d="M-18 -26 L22 -36 L16 -20 Z" fill="#ff6f00" />
+                <path d="M20 -32 L32 -40 M20 -28 L34 -28" stroke="#2e8b37" stroke-width="3" stroke-linecap="round" />
+                <circle cx="-6" cy="-18" r="11" fill="#fff8e7" />
+              </g>
+            </svg>
+          </div>
+          <div class="flavor-body">
+            <h3>Waffle de Zanahoria</h3>
+            <p>
+              Tono dorado cálido con un toque ligeramente dulce y aromático, perfecto para acompañar
+              con frutas frescas como fresas o arándanos[cite: 1, 5, 11].
+            </p>
+            <div class="ingredients-list">Ingredientes: Zanahoria natural, harina de avena, leche y huevo[cite: 1, 5, 10].</div>
+            <div class="card-actions">
+              <button class="order-card-btn" onclick="quickAdd('Waffle de Zanahoria')">+ Agregar al Pedido</button>
+              <button class="detail-card-btn" onclick="selectInBuilder('Waffle de Zanahoria')">Personalizar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3. WAFFLE DE BETERRAGA -->
+        <article class="flavor-card beet" data-category="beet">
+          <div class="flavor-img-box">
+            <span class="flavor-tag">🍠 100% Beterraga Natural</span>
+            <button class="like-btn" onclick="toggleLike(this, 'Waffle de Beterraga')" title="Me gusta">🤍</button>
+            <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="240" fill="#fce8ef" />
+              <circle cx="65" cy="45" r="75" fill="#f8c8d8" />
+              <circle cx="345" cy="195" r="85" fill="#fad4e1" />
+              <!-- Plato -->
+              <ellipse cx="200" cy="145" rx="145" ry="68" fill="#ffffff" stroke="#ebcad5" stroke-width="3" />
+              <!-- Waffle Rosado/Fucsia de Beterraga -->
+              <g transform="translate(200, 125)">
+                <ellipse cx="0" cy="10" rx="86" ry="54" fill="#881643" />
+                <ellipse cx="0" cy="0" rx="86" ry="54" fill="#e6457f" stroke="#b52258" stroke-width="4" />
+                <g fill="#ad1c52">
+                  <rect x="-50" y="-28" width="24" height="14" rx="4" />
+                  <rect x="-12" y="-28" width="24" height="14" rx="4" />
+                  <rect x="26" y="-28" width="24" height="14" rx="4" />
+                  <rect x="-50" y="-7" width="24" height="14" rx="4" />
+                  <rect x="-12" y="-7" width="24" height="14" rx="4" />
+                  <rect x="26" y="-7" width="24" height="14" rx="4" />
+                  <rect x="-50" y="14" width="24" height="14" rx="4" />
+                  <rect x="-12" y="14" width="24" height="14" rx="4" />
+                  <rect x="26" y="14" width="24" height="14" rx="4" />
+                </g>
+                <!-- Fresa y arándanos encima -->
+                <circle cx="0" cy="-18" r="13" fill="#ffffff" />
+                <path d="M-9 -24 C-9 -35, 9 -35, 9 -24 C9 -16, 0 -10, 0 -10 C0 -10, -9 -16, -9 -24 Z" fill="#ff2652" />
+                <circle cx="-18" cy="-14" r="7" fill="#324376" />
+                <circle cx="18" cy="-14" r="7" fill="#324376" />
+              </g>
+            </svg>
+          </div>
+          <div class="flavor-body">
+            <h3>Waffle de Beterraga</h3>
+            <p>
+              Color rosado-rojizo llamativo y atractivo que conquista a primera vista, demostrando que
+              comer saludable también puede ser divertido[cite: 1, 12].
+            </p>
+            <div class="ingredients-list">Ingredientes: Beterraga natural, harina de avena, leche y huevo[cite: 1, 5, 10].</div>
+            <div class="card-actions">
+              <button class="order-card-btn" onclick="quickAdd('Waffle de Beterraga')">+ Agregar al Pedido</button>
+              <button class="detail-card-btn" onclick="selectInBuilder('Waffle de Beterraga')">Personalizar</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONSTRUCTOR INTERACTIVO DE PEDIDOS -->
+    <section id="pedir">
+      <div class="section-header">
+        <h2>Arma tu Pedido Nutri Wafles</h2>
+        <p>Personaliza tu refrigerio para el descanso del COAR Pasco y envíalo directo por WhatsApp[cite: 1, 4, 11].</p>
+      </div>
+
+      <div class="order-builder">
+        <div>
+          <div class="builder-group">
+            <label>1. Elige la variedad de verdura:</label>
+            <div class="option-chips" id="flavor-options">
+              <button type="button" class="chip-select selected" data-val="Waffle de Espinaca" onclick="pickChip(this, 'flavor-options')">🥬 Espinaca</button>
+              <button type="button" class="chip-select" data-val="Waffle de Zanahoria" onclick="pickChip(this, 'flavor-options')">🥕 Zanahoria</button>
+              <button type="button" class="chip-select" data-val="Waffle de Beterraga" onclick="pickChip(this, 'flavor-options')">🍠 Beterraga</button>
+              <button type="button" class="chip-select" data-val="Trío Degustación (3 sabores)" onclick="pickChip(this, 'flavor-options')">🌈 Trío Mixto</button>
+            </div>
+          </div>
+
+          <div class="builder-group">
+            <label>2. Elige tu acompañamiento favorito:</label>
+            <div class="option-chips" id="topping-options">
+              <button type="button" class="chip-select selected" data-val="Fresas y Arándanos" onclick="pickChip(this, 'topping-options')">🍓 Fresas y Arándanos</button>
+              <button type="button" class="chip-select" data-val="Miel de Abeja Natural" onclick="pickChip(this, 'topping-options')">🍯 Miel Natural</button>
+              <button type="button" class="chip-select" data-val="Mantequilla Suave" onclick="pickChip(this, 'topping-options')">🧈 Mantequilla</button>
+              <button type="button" class="chip-select" data-val="Yogurt Natural y Fruta" onclick="pickChip(this, 'topping-options')">🥣 Yogurt y Fruta</button>
+            </div>
+          </div>
+
+          <div class="builder-group">
+            <label>3. Cantidad de porciones:</label>
+            <div class="qty-control">
+              <button type="button" class="qty-btn" onclick="changeQty(-1)">-</button>
+              <span id="builder-qty" style="font-weight: 800; font-size: 1.15rem;">1</span>
+              <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+
+          <button type="button" class="btn-primary" onclick="addFromBuilder()">
+            ✨ Añadir a mi Lista de Pedido
+          </button>
+        </div>
+
+        <div class="order-summary-box">
+          <h3>🧾 Resumen de tu Pedido</h3>
+          <ul class="cart-items-list" id="cart-list">
+            <li style="justify-content: center; color: var(--text-muted);">
+              Aún no agregaste waffles. ¡Elige tu favorito!
+            </li>
+          </ul>
+          <button type="button" class="whatsapp-send-btn" onclick="sendWhatsAppOrder()">
+            📲 Enviar Pedido por WhatsApp (+51 964 299 859)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESIGN THINKING Y LIENZO CANVAS -->
+    <section id="design-thinking">
+      <div class="section-header">
+        <h2>Nuestro Proceso: Design Thinking y Canvas</h2>
+        <p>Cómo desarrollamos Nutri Wafles en el COAR Pasco paso a paso[cite: 1, 4, 5].</p>
+      </div>
+
+      <div class="dt-timeline" style="margin-bottom: 32px;">
+        <div class="dt-step">
+          <span class="dt-num">1</span>
+          <h3>Empatizar</h3>
+          <p>Identificamos que los estudiantes necesitan alternativas de refrigerios más nutritivas y prácticas[cite: 4].</p>
+        </div>
+        <div class="dt-step">
+          <span class="dt-num">2</span>
+          <h3>Definir</h3>
+          <p>Reconocimos la falta de variedad de opciones nutritivas frente a los refrigerios tradicionales[cite: 4].</p>
+        </div>
+        <div class="dt-step">
+          <span class="dt-num">3</span>
+          <h3>Idear</h3>
+          <p>Propusimos elaborar waffles saludables con espinaca, zanahoria y beterraga[cite: 4].</p>
+        </div>
+        <div class="dt-step">
+          <span class="dt-num">4</span>
+          <h3>Prototipar</h3>
+          <p>Probamos ingredientes, preparaciones y presentaciones de cada variedad[cite: 4].</p>
+        </div>
+        <div class="dt-step">
+          <span class="dt-num">5</span>
+          <h3>Evaluar</h3>
+          <p>Analizamos sabor, textura y aceptación de los consumidores para mejorar continuamente[cite: 4].</p>
+        </div>
+      </div>
+
+      <div class="business-grid">
+        <div class="panel-card">
+          <h3>📊 Lienzo Canvas</h3>
+          <ul class="styled-list">
+            <li><strong>Segmento de clientes:</strong> Estudiantes del COAR Pasco y personas interesadas en refrigerios nutritivos[cite: 5].</li>
+            <li><strong>Propuesta de valor:</strong> Wafles con espinaca, zanahoria y beterraga con colores y sabores naturales[cite: 5].</li>
+            <li><strong>Estructura de costos:</strong> Verduras, harina de avena, huevos, leche, envases y materiales[cite: 5].</li>
+          </ul>
+        </div>
+        <div class="panel-card">
+          <h3>🧪 Evidencias y Aprendizajes</h3>
+          <ul class="styled-list">
+            <li><strong>Prototipos:</strong> Wafles elaborados con tres verduras naturales[cite: 10].</li>
+            <li><strong>Trabajo en equipo:</strong> Distribución de roles desde la ideación hasta la elaboración[cite: 9].</li>
+            <li><strong>Resultado:</strong> Un producto diferente que une salud, color y buen sabor[cite: 8].</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EQUIPO DE TRABAJO -->
+    <section id="equipo">
+      <div class="team-box">
+        <span class="pill-tag">Comunicación y Participación del Equipo[cite: 9]</span>
+        <h2>Integrantes de Nutri Wafles</h2>
+        <p style="max-width: 740px; margin: 12px auto 0; color: var(--text-muted);">
+          Cada integrante aportó sus habilidades y conocimientos desde la planificación hasta la
+          elaboración de los waffles en el COAR Pasco[cite: 1, 9].
+        </p>
+        <div class="team-members">
+          <div class="member-chip">👩‍🍳 Claudia Peralta</div>
+          <div class="member-chip">👩‍🍳 Valeria Alcedo</div>
+          <div class="member-chip">👩‍🍳 Diana Bravo</div>
+          <div class="member-chip">👩‍🍳 Mia Alejos</div>
+          <div class="member-chip">👩‍🍳 Dana Cuicapusa</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="contacto">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h2>Nutri Wafles</h2>
+        <p>¡Alimentarse saludablemente también puede ser delicioso y divertido![cite: 12]</p>
+        <div class="footer-quote">
+          “Nutri Wafles: pequeños cambios, grandes ideas.”[cite: 12]
+        </div>
+      </div>
+
+      <div class="contact-cards">
+        <a href="https://wa.me/51964299859" target="_blank" class="contact-item">
+          <span>📞</span>
+          <span>WhatsApp / Teléfono: +51 964 299 859</span>
+        </a>
+        <div class="contact-item">
+          <span>📱</span>
+          <span>Instagram / Correo: @nutriwafles</span>
+        </div>
+        <div class="contact-item">
+          <span>🌐</span>
+          <span>Sitio Web: www.nutriwafles</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Emprendimiento Estudiantil COAR Pasco • Nutri Wafles (@nutriwafles)[cite: 1, 12]
+    </div>
+  </footer>
+
+  <script>
+    /* ==========================================
+       1. MODAL DE BIENVENIDA ADORABLE
+       ========================================== */
+    function closeWelcome() {
+      const overlay = document.getElementById('welcome-overlay');
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.3s ease';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        setMode('jump');
+        showPhrase("¡Bienvenido cliente! 💖");
+      }, 280);
+    }
+
+    /* ==========================================
+       2. LÓGICA INTERACTIVA DE PEDIDOS Y MENÚ
+       ========================================== */
+    let cart = [];
+    let builderQty = 1;
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-msg');
+      toast.textContent = msg;
+      toast.classList.add('visible');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
+    }
+
+    function filterFlavors(category, btn) {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.flavor-card').forEach(card => {
+        card.style.display = (category === 'all' || card.dataset.category === category) ? 'flex' : 'none';
+      });
+    }
+
+    function toggleLike(btn, name) {
+      const liked = btn.textContent === '❤️';
+      btn.textContent = liked ? '🤍' : '❤️';
+      if (!liked) {
+        showToast(`¡Te encanta el ${name}!`);
+        setMode('thumb');
+      }
+    }
+
+    function pickChip(btn, groupId) {
+      document.querySelectorAll(`#${groupId} .chip-select`).forEach(c => c.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function changeQty(delta) {
+      builderQty = Math.max(1, Math.min(20, builderQty + delta));
+      document.getElementById('builder-qty').textContent = builderQty;
+    }
+
+    function selectInBuilder(flavorName) {
+      document.getElementById('pedir').scrollIntoView();
+      document.querySelectorAll('#flavor-options .chip-select').forEach(c => {
+        c.classList.toggle('selected', c.dataset.val === flavorName);
+      });
+      showToast(`Personalizando: ${flavorName}`);
+    }
+
+    function quickAdd(flavorName) {
+      cart.push({ flavor: flavorName, topping: 'Fresas y Arándanos', qty: 1 });
+      renderCart();
+      showToast(`+1 ${flavorName} agregado`);
+      setMode('eat');
+    }
+
+    function addFromBuilder() {
+      const flavor = document.querySelector('#flavor-options .chip-select.selected').dataset.val;
+      const topping = document.querySelector('#topping-options .chip-select.selected').dataset.val;
+      cart.push({ flavor, topping, qty: builderQty });
+      renderCart();
+      showToast(`¡${builderQty}x ${flavor} añadido al pedido!`);
+      setMode('thumb');
+    }
+
+    function removeCartItem(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function renderCart() {
+      const list = document.getElementById('cart-list');
+      const countBadge = document.getElementById('nav-cart-count');
+      const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+      countBadge.textContent = totalItems;
+
+      if (cart.length === 0) {
+        list.innerHTML = `<li style="justify-content: center; color: var(--text-muted);">Aún no agregaste waffles. ¡Elige tu favorito!</li>`;
+        return;
+      }
+
+      list.innerHTML = cart.map((item, idx) => `
+        <li>
+          <span><strong>${item.qty}x ${item.flavor}</strong><br><small style="color:#6e4752;">Con ${item.topping}</small></span>
+          <button class="remove-item-btn" onclick="removeCartItem(${idx})" title="Quitar">✕</button>
+        </li>
+      `).join('');
+    }
+
+    function sendWhatsAppOrder() {
+      if (cart.length === 0) {
+        showToast('Agrega al menos un waffle antes de enviar 😊');
+        return;
+      }
+      const lines = cart.map(i => `• ${i.qty}x ${i.flavor} (${i.topping})`).join('%0A');
+      const message = `¡Hola Nutri Wafles! 🧇 Quisiera hacer el siguiente pedido:%0A${lines}%0A¡Gracias!`;
+      window.open(`https://wa.me/51964299859?text=${message}`, '_blank');
+    }
+
+    /* ==========================================
+       3. RENDERIZADOR PIXEL ART 8-BIT DE KIRBY
+       (SILUETA ESFÉRICA/OVALADA PERFECTA)
+       ========================================== */
+    const wrapper = document.getElementById('pixel-mascot-wrapper');
+    const canvas = document.getElementById('pixel-canvas');
+    const ctx = canvas.getContext('2d');
+    const previewCanvas = document.getElementById('welcome-kirby-preview');
+    const previewCtx = previewCanvas.getContext('2d');
+    const bubble = document.getElementById('mascot-bubble');
+
+    function renderKirby8Bit(targetCtx, pixelSize, stepOffset, currentMode, flip) {
+      const W = 32;
+      const H = 32;
+      targetCtx.clearRect(0, 0, W * pixelSize, H * pixelSize);
+      targetCtx.save();
+
+      if (flip) {
+        targetCtx.translate(W * pixelSize, 0);
+        targetCtx.scale(-1, 1);
+      }
+
+      function px(x, y, color) {
+        if (x < 0 || x >= W || y < 0 || y >= H) return;
+        targetCtx.fillStyle = color;
+        targetCtx.fillRect(Math.round(x) * pixelSize, Math.round(y) * pixelSize, pixelSize, pixelSize);
+      }
+
+      // Función auxiliar para dibujar elipses pixeladas limpias
+      function fillPixelEllipse(cx, cy, rx, ry, fillColor, outlineColor, shadeColor) {
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            const dx = (x + 0.5 - cx) / rx;
+            const dy = (y + 0.5 - cy) / ry;
+            const d = dx * dx + dy * dy;
+            if (d <= 1.0) {
+              if (outlineColor && d > 0.76) {
+                px(x, y, outlineColor);
+              } else if (shadeColor && dy > 0.45) {
+                px(x, y, shadeColor);
+              } else {
+                px(x, y, fillColor);
+              }
+            }
+          }
+        }
+      }
+
+      const bounceY = stepOffset > 0 ? -0.5 : 0;
+      const footLOffset = stepOffset === 1 ? -1 : 0;
+      const footROffset = stepOffset === 2 ? -1 : 0;
+
+      // 1. PIES OVALADOS ROSADOS
+      fillPixelEllipse(11.5, 27.5 + footLOffset, 4.2, 2.5, '#e65380', '#1e1318', '#c73a66');
+      fillPixelEllipse(20.5, 27.5 + footROffset, 4.2, 2.5, '#e65380', '#1e1318', '#c73a66');
+
+      // 2. BRAZOS OVALADOS ROSADOS
+      if (currentMode === 'thumb') {
+        // Brazo izquierdo levantado con pulgar arriba
+        fillPixelEllipse(5.5, 16.5 + bounceY, 2.6, 3.2, '#ff85a8', '#1e1318');
+        px(5, 12 + bounceY, '#1e1318');
+        px(6, 12 + bounceY, '#1e1318');
+        px(5, 13 + bounceY, '#ff85a8');
+        px(6, 13 + bounceY, '#ff85a8');
+      } else if (currentMode === 'eat') {
+        fillPixelEllipse(7.5, 18.5 + bounceY, 2.8, 2.4, '#ff85a8', '#1e1318');
+      } else {
+        fillPixelEllipse(6.0, 17.5 + bounceY, 3.0, 2.5, '#ff85a8', '#1e1318');
+      }
+      fillPixelEllipse(25.8, 18.0 + bounceY, 3.0, 2.5, '#ff85a8', '#1e1318');
+
+      // 3. CUERPO ESFÉRICO / OVALADO PERFECTO DE KIRBY
+      fillPixelEllipse(16.0, 18.0 + bounceY, 9.8, 8.8, '#ff85a8', '#1e1318', '#f2668f');
+      // Brillo suave superior
+      px(11, 11 + bounceY, '#ffb8ce');
+      px(12, 11 + bounceY, '#ffb8ce');
+
+      // 4. GORRO DE CHEF BLANCO ABULLONADO + ESTRELLA AMARILLA
+      fillPixelEllipse(15.5, 6.2 + bounceY, 6.8, 3.6, '#ffffff', '#1e1318', '#e3dde0');
+      fillPixelEllipse(11.0, 7.2 + bounceY, 3.8, 2.8, '#ffffff', '#1e1318', '#e3dde0');
+      fillPixelEllipse(20.0, 7.2 + bounceY, 3.8, 2.8, '#ffffff', '#1e1318', '#e3dde0');
+      // Banda del gorro
+      for (let bx = 10; bx <= 21; bx++) {
+        px(bx, 9 + bounceY, '#ffffff');
+        px(bx, 10 + bounceY, '#e3dde0');
+      }
+      // Estrella amarilla en el costado derecho del gorro
+      const sx = 20, sy = 8 + bounceY;
+      px(sx, sy - 1, '#ffd447');
+      px(sx - 1, sy, '#ffd447');
+      px(sx, sy, '#fff3a1');
+      px(sx + 1, sy, '#ffd447');
+      px(sx, sy + 1, '#ffd447');
+
+      // 5. ROSTRO: OJOS CON BRILLO, MEJILLAS OVALADAS Y BOCA
+      if (currentMode === 'eat') {
+        // Ojos cerrados felices (^_^)
+        px(12, 16 + bounceY, '#1e1318');
+        px(13, 15 + bounceY, '#1e1318');
+        px(14, 16 + bounceY, '#1e1318');
+
+        px(18, 16 + bounceY, '#1e1318');
+        px(19, 15 + bounceY, '#1e1318');
+        px(20, 16 + bounceY, '#1e1318');
+      } else {
+        // Ojos grandes ovalados con brillo blanco
+        for (let ey = 14; ey <= 17; ey++) {
+          px(13, ey + bounceY, '#1e1318');
+          px(19, ey + bounceY, '#1e1318');
+        }
+        px(13, 14 + bounceY, '#ffffff');
+        px(19, 14 + bounceY, '#ffffff');
+      }
+
+      // Mejillas sonrojadas ovaladas
+      px(9, 18 + bounceY, '#d9386a');
+      px(10, 18 + bounceY, '#d9386a');
+      px(22, 18 + bounceY, '#d9386a');
+      px(23, 18 + bounceY, '#d9386a');
+
+      // Boca
+      if (currentMode === 'thumb') {
+        // Sonrisa tierna cerrada
+        px(15, 20 + bounceY, '#1e1318');
+        px(16, 20 + bounceY, '#1e1318');
+      } else {
+        // Boquita abierta con lengua
+        px(15, 19 + bounceY, '#7a1632');
+        px(16, 19 + bounceY, '#7a1632');
+        px(15, 20 + bounceY, '#ff5c82');
+        px(16, 20 + bounceY, '#ff5c82');
+      }
+
+      // 6. ACCESORIOS: TENEDOR METÁLICO Y WAFFLE DORADO
+      if (currentMode !== 'thumb' && currentMode !== 'eat') {
+        // Tenedor plateado en mano derecha (izquierda visual)
+        for (let fy = 11; fy <= 17; fy++) px(4, fy + bounceY, '#cfd6e0');
+        px(3, 10 + bounceY, '#cfd6e0');
+        px(4, 10 + bounceY, '#cfd6e0');
+        px(5, 10 + bounceY, '#cfd6e0');
+        px(3, 9 + bounceY, '#ffffff');
+        px(5, 9 + bounceY, '#ffffff');
+      }
+
+      // Waffle dorado con cuadrícula y mantequilla
+      const wx = currentMode === 'eat' ? 14 : 26;
+      const wy = currentMode === 'eat' ? 19 + bounceY : 14 + bounceY;
+      fillPixelEllipse(wx + 1.5, wy + 1.5, 3.2, 3.2, '#e59c45', '#1e1318');
+      px(wx + 1, wy + 1, '#a85d18');
+      px(wx + 2, wy + 2, '#a85d18');
+      px(wx + 1, wy + 1, '#ffe66d'); // cuadrito de mantequilla
+
+      targetCtx.restore();
+    }
+
+    // Dibuja la vista previa de Kirby en el modal de bienvenida
+    renderKirby8Bit(previewCtx, 2.5, 0, 'thumb', false);
+
+    // Movimiento por toda la pantalla
+    let posX = 48;
+    let posY = 115;
+    let velX = 1.65;
+    let velY = 0.85;
+    let facingLeft = false;
+    let mode = 'walk';
+    let tick = 0;
+
+    const PHRASES = [
+      "¡Bienvenido cliente! 💖",
+      "¡Wafles de espinaca! 🥬",
+      "¡Prueba el de beterraga! 🍠",
+      "¡Zanahoria súper rica! 🥕",
+      "¡Aguante COAR Pasco!",
+      "@nutriwafles ✨"
+    ];
+
+    function showPhrase(customText) {
+      bubble.textContent = customText || PHRASES[Math.floor(Math.random() * PHRASES.length)];
+      bubble.classList.add('show');
+      clearTimeout(window.bubbleTimer);
+      window.bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 2800);
+    }
+
+    window.setMode = function(newMode) {
+      mode = newMode;
+      document.querySelectorAll('.retro-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById('btn-' + newMode);
+      if (btn) btn.classList.add('active');
+
+      if (newMode === 'eat') showPhrase("¡Ñam ñam! Qué rico waffle");
+      else if (newMode === 'thumb') showPhrase("¡100% nutritivo y natural!");
+      else if (newMode === 'jump') showPhrase("¡Yupi! Energía COAR");
+      else showPhrase("¡Paseando por la web!");
+    };
+
+    wrapper.addEventListener('click', () => {
+      const modes = ['eat', 'thumb', 'jump', 'walk'];
+      const next = modes[(modes.indexOf(mode) + 1) % modes.length];
+      setMode(next);
+    });
+
+    function loop() {
+      tick++;
+      const maxX = window.innerWidth - 138;
+      const maxY = window.innerHeight - 160;
+
+      if (mode === 'walk' || mode === 'jump') {
+        posX += velX;
+        posY += velY;
+
+        if (posX <= 8) {
+          posX = 8;
+          velX = Math.abs(velX);
+          facingLeft = false;
+        } else if (posX >= maxX) {
+          posX = maxX;
+          velX = -Math.abs(velX);
+          facingLeft = true;
+        }
+
+        if (posY <= 72) {
+          posY = 72;
+          velY = Math.abs(velY);
+        } else if (posY >= maxY) {
+          posY = maxY;
+          velY = -Math.abs(velY);
+        }
+
+        if (tick % 240 === 0) {
+          velY = (Math.random() - 0.5) * 2.2;
+          if (Math.random() > 0.6) showPhrase();
+        }
+      }
+
+      const jumpOffset = mode === 'jump' ? -Math.abs(Math.sin(tick * 0.14)) * 30 : 0;
+      wrapper.style.left = `${posX}px`;
+      wrapper.style.top = `${posY + jumpOffset}px`;
+
+      const frameCycle = Math.floor(tick / 10) % 4;
+      const stepOffset = (mode === 'walk' || mode === 'jump')
+        ? (frameCycle === 1 ? 1 : frameCycle === 3 ? 2 : 0)
+        : (frameCycle % 2);
+
+      const renderMode = (mode === 'eat' && Math.floor(tick / 16) % 2 === 1) ? 'walk' : mode;
+      renderKirby8Bit(ctx, 4, stepOffset, renderMode, facingLeft);
+
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>
